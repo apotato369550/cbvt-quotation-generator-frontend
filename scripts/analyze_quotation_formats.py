@@ -12,6 +12,7 @@ import sys
 from collections import defaultdict, Counter
 from pathlib import Path
 from statistics import median
+from parse_quotation_items import extract_quotation_items
 
 
 def load_extracted_files(extraction_dir):
@@ -54,6 +55,9 @@ def analyze_files(files_data):
     text_lengths = []
     file_structures = []  # Track which fields each file has
 
+    # Track item structures (for item structure analysis)
+    item_structures = []  # List of item analysis results
+
     # Collect all data
     for file_info in files_data:
         filename = file_info['filename']
@@ -80,6 +84,13 @@ def analyze_files(files_data):
         # Track metrics
         page_counts[page_count] += 1
         text_lengths.append(len(extracted_text))
+
+        # Parse item structure
+        try:
+            item_result = extract_quotation_items(data)
+            item_structures.append(item_result)
+        except Exception as e:
+            print(f"Warning: Failed to parse items in {filename}: {e}", file=sys.stderr)
 
     # Find common fields (>90% threshold)
     threshold = total_files * 0.9
@@ -113,6 +124,9 @@ def analyze_files(files_data):
     # Find anomalies
     anomalies = detect_anomalies(file_structures, common_fields, text_stats)
 
+    # Analyze item structures
+    item_structure_analysis = analyze_item_structures(item_structures)
+
     return {
         'total_files_analyzed': total_files,
         'common_fields': common_fields,
@@ -120,7 +134,8 @@ def analyze_files(files_data):
         'format_classes': format_classes,
         'page_count_distribution': page_count_dist,
         'extracted_text_length_stats': text_stats,
-        'anomalies': anomalies
+        'anomalies': anomalies,
+        'item_structure_analysis': item_structure_analysis
     }
 
 
@@ -162,6 +177,85 @@ def identify_format_classes(file_structures, common_fields):
         })
 
     return classes
+
+
+def analyze_item_structures(item_structures):
+    """
+    Aggregate item structure metrics across all files.
+
+    Args:
+        item_structures: List of results from extract_quotation_items()
+
+    Returns:
+        Dict with aggregated metrics for item_structure_analysis section
+    """
+    if not item_structures:
+        return {
+            'item_count_stats': {'min': 0, 'max': 0, 'median': 0, 'mean': 0},
+            'hierarchy_depth_distribution': {'1_level': 0, '2_levels': 0, '3_levels': 0},
+            'location_grouping': {'files_with_grouping': 0, 'percentage': 0},
+            'pricing_patterns_frequency': {},
+            'sample_item_extractions': []
+        }
+
+    # Collect item counts
+    item_counts = [item['item_count'] for item in item_structures]
+
+    # Collect hierarchy depths
+    hierarchy_depths = [item['hierarchy_depth'] for item in item_structures]
+
+    # Collect location grouping info
+    files_with_location = sum(1 for item in item_structures if item['has_location_grouping'])
+
+    # Aggregate pricing patterns
+    pricing_pattern_freq = Counter()
+    for item in item_structures:
+        for pattern in item['pricing_patterns']:
+            pricing_pattern_freq[pattern] += 1
+
+    # Build hierarchy depth distribution
+    hierarchy_dist = {
+        '1_level': sum(1 for d in hierarchy_depths if d == 1),
+        '2_levels': sum(1 for d in hierarchy_depths if d == 2),
+        '3_levels': sum(1 for d in hierarchy_depths if d == 3),
+    }
+
+    # Calculate item count statistics
+    item_stats = {
+        'min': min(item_counts) if item_counts else 0,
+        'max': max(item_counts) if item_counts else 0,
+        'median': int(median(item_counts)) if item_counts else 0,
+        'mean': int(sum(item_counts) / len(item_counts)) if item_counts else 0,
+    }
+
+    # Build sample extractions (up to 10 diverse examples)
+    sample_extractions = []
+    # Sort by item count to get diverse examples
+    sorted_items = sorted(item_structures, key=lambda x: x['item_count'])
+
+    # Select every nth item to get diversity
+    step = max(1, len(sorted_items) // 10)
+    for idx in range(0, len(sorted_items), step):
+        if len(sample_extractions) < 10:
+            item = sorted_items[idx]
+            sample_extractions.append({
+                'filename': item['filename'],
+                'item_count': item['item_count'],
+                'hierarchy_depth': item['hierarchy_depth'],
+                'has_location_grouping': item['has_location_grouping'],
+                'pricing_patterns': item['pricing_patterns']
+            })
+
+    return {
+        'item_count_stats': item_stats,
+        'hierarchy_depth_distribution': hierarchy_dist,
+        'location_grouping': {
+            'files_with_grouping': files_with_location,
+            'percentage': f"{(files_with_location / len(item_structures) * 100):.1f}%"
+        },
+        'pricing_patterns_frequency': dict(pricing_pattern_freq),
+        'sample_item_extractions': sample_extractions
+    }
 
 
 def detect_anomalies(file_structures, common_fields, text_stats):
@@ -239,6 +333,13 @@ def main():
     print(f"  Common fields (>90%): {len(analysis['common_fields'])}")
     print(f"  Format classes identified: {len(analysis['format_classes'])}")
     print(f"  Anomalies detected: {len(analysis['anomalies'])}")
+    if 'item_structure_analysis' in analysis:
+        item_stats = analysis['item_structure_analysis']['item_count_stats']
+        print(f"\nItem Structure Analysis:")
+        print(f"  Item count range: {item_stats['min']}-{item_stats['max']} (median: {item_stats['median']}, mean: {item_stats['mean']})")
+        print(f"  Hierarchy depths: {analysis['item_structure_analysis']['hierarchy_depth_distribution']}")
+        print(f"  Location grouping: {analysis['item_structure_analysis']['location_grouping']['percentage']} of files")
+        print(f"  Pricing patterns: {len(analysis['item_structure_analysis']['pricing_patterns_frequency'])} types found")
 
 
 if __name__ == '__main__':
