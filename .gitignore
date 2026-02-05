@@ -1,3 +1,19 @@
+# Data & Output
 data/
 output/
-venv
+
+# Python
+venv/
+scripts/venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+storage/node_modules/
+
+# Local data (user-generated quotations)
+storage/quotations.json
+
+# Environment
+.env
