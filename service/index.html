@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotation Generator</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#f5f5f5;color:#333;line-height:1.6}header{background:#2c3e50;color:white;padding:20px 0;margin-bottom:30px;text-align:center}h1{font-size:28px;margin-bottom:5px}.container{max-width:1200px;margin:0 auto;padding:20px}.nav-tabs{display:flex;gap:10px;margin-bottom:20px;border-bottom:2px solid #ddd}.nav-tabs button{padding:10px 20px;background:0;border:none;cursor:pointer;font-size:14px;font-weight:600;color:#666;border-bottom:3px solid transparent;transition:all .3s}.nav-tabs button.active{color:#2c3e50;border-bottom-color:#3498db}.section{display:none;background:white;padding:30px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.1)}.section.active{display:block}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}.form-grid.full{grid-template-columns:1fr}.form-group{display:flex;flex-direction:column}label{font-weight:600;margin-bottom:5px;font-size:13px;color:#555}input,select,textarea{padding:10px;border:1px solid #ddd;border-radius:3px;font:inherit;font-size:14px;width:100%}textarea{resize:vertical;min-height:80px}input:focus,select:focus,textarea:focus{outline:0;border-color:#3498db;box-shadow:0 0 0 3px rgba(52,152,219,.1)}.section-title{font-size:16px;font-weight:700;margin-top:30px;margin-bottom:15px;padding-bottom:10px;border-bottom:2px solid #ecf0f1;color:#2c3e50}.item-block{background:#f9f9f9;padding:20px;margin-bottom:20px;border-left:4px solid #3498db;border-radius:3px}.item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.item-title{font-weight:600;color:#2c3e50}.btn{padding:10px 16px;border:none;border-radius:3px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}.btn-primary{background:#3498db;color:white}.btn-primary:hover{background:#2980b9}.btn-danger{background:#e74c3c;color:white}.btn-danger:hover{background:#c0392b}.btn-secondary{background:#95a5a6;color:white}.btn-secondary:hover{background:#7f8c8d}.btn-success{background:#27ae60;color:white}.btn-success:hover{background:#229954}.btn-small{padding:6px 10px;font-size:12px}.btn-group{display:flex;gap:10px;margin-top:20px}.task-item{background:white;padding:15px;margin-bottom:10px;border:1px solid #e0e0e0;border-radius:3px}.task-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end}.task-grid input,.task-grid select{width:100%}table{width:100%;border-collapse:collapse;margin-top:20px}th{background:#ecf0f1;padding:12px;text-align:left;font-weight:600;border-bottom:2px solid #bdc3c7}td{padding:12px;border-bottom:1px solid #ddd}tr:hover{background:#f9f9f9}.action-buttons{display:flex;gap:5px}.print-view{background:white;padding:40px;line-height:1.8}.print-view h2{margin:20px 0 15px 0;font-size:18px;color:#2c3e50;border-bottom:1px solid #ddd;padding-bottom:10px}.print-view h3{margin:15px 0 10px 0;font-size:15px;color:#555}.quotation-header{text-align:center;margin-bottom:30px;padding-bottom:20px;border-bottom:2px solid #333}.company-name{font-size:24px;font-weight:bold;color:#2c3e50}.company-info{font-size:13px;color:#666}.customer-section{margin-bottom:25px;padding:15px;background:#f9f9f9;border-radius:3px}.items-section{margin-bottom:25px}.item-print{page-break-inside:avoid;margin-bottom:20px;padding:15px;border:1px solid #ddd;border-radius:3px}.task-print{margin-left:20px;margin-bottom:10px;padding:10px;background:#f9f9f9;border-radius:3px}.summary-section{margin-top:30px;padding:20px;background:#ecf0f1;border-radius:3px}.print-buttons{display:flex;gap:10px;margin-top:20px;margin-bottom:20px}@media print{.print-buttons,.nav-tabs,.btn-group{display:none}.print-view{padding:0;box-shadow:none;background:white}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Quotation Generator</h1>
+      <p>Create, manage, and export professional quotations</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="nav-tabs">
+      <button class="nav-btn active" data-section="form">Create Quotation</button>
+      <button class="nav-btn" data-section="list">My Quotations</button>
+      <button class="nav-btn" data-section="view">View Quotation</button>
+    </div>
+
+    <div id="form" class="section active">
+      <div class="form-grid full">
+        <div class="form-group">
+          <label>Document Type</label>
+          <select id="docType"><option value="job">Job Quotation</option><option value="summary">Summary</option></select>
+        </div>
+      </div>
+
+      <div class="section-title">Customer Information</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Date</label><input type="date" id="date" required></div>
+        <div class="form-group"><label>Customer Name</label><input type="text" id="customerName" required></div>
+        <div class="form-group"><label>Location</label><input type="text" id="customerLocation"></div>
+        <div class="form-group"><label>Attention</label><input type="text" id="attention"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="phone"></div>
+        <div class="form-group"><label>Installation Location</label><input type="text" id="installLocation"></div>
+      </div>
+
+      <div class="section-title">Items & Tasks</div>
+      <div id="itemsContainer"></div>
+      <button class="btn btn-primary" id="addItemBtn">+ Add Item</button>
+
+      <div class="section-title">Summary & Terms</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Payment Terms</label><textarea id="paymentTerms"></textarea></div>
+        <div class="form-group"><label>Warranty</label><textarea id="warranty"></textarea></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Exceptions/Notes</label><textarea id="exceptions"></textarea></div>
+        <div class="form-group"><label>Manager</label><input type="text" id="manager" value="J.B Yap Jr."></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-success" id="generateBtn">Generate Quotation</button>
+        <button class="btn btn-secondary" id="clearBtn">Clear Form</button>
+      </div>
+    </div>
+
+    <div id="list" class="section">
+      <h2>Saved Quotations</h2>
+      <div id="quotationsList"></div>
+    </div>
+
+    <div id="view" class="section">
+      <div class="print-buttons">
+        <button class="btn btn-primary" id="printBtn">Print</button>
+        <button class="btn btn-secondary" id="downloadPdfBtn">Download PDF</button>
+        <button class="btn btn-secondary" id="downloadHtmlBtn">Download HTML</button>
+        <button class="btn btn-secondary" id="downloadJsonBtn">Download JSON</button>
+        <button class="btn btn-secondary" id="backBtn">Back to List</button>
+      </div>
+      <div id="printArea" class="print-view"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = '/api/quotations';
+    let currentQuotation = null;
+
+    document.getElementById('date').valueAsDate = new Date();
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.section).classList.add('active');
+        if (btn.dataset.section === 'list') loadQuotations();
+      });
+    });
+
+    document.getElementById('addItemBtn').addEventListener('click', () => {
+      const itemNum = document.querySelectorAll('.item-block').length + 1;
+      const itemHtml = `<div class="item-block"><div class="item-header"><div class="item-title">Item ${itemNum}</div><button type="button" class="btn btn-danger btn-small" onclick="this.closest('.item-block').remove()">Remove</button></div><div class="form-grid"><div class="form-group"><label>Item Name</label><input type="text" class="itemName" required></div><div class="form-group"><label>AC Brand</label><input type="text" class="acBrand"></div><div class="form-group"><label>AC Model</label><input type="text" class="acModel"></div><div class="form-group"><label>Warranty</label><input type="text" class="itemWarranty"></div></div><div class="section-title" style="margin-top:15px">Tasks</div><div class="tasksContainer"></div><button type="button" class="btn btn-primary" onclick="addTask(this)">+ Add Task</button></div>`;
+      document.getElementById('itemsContainer').insertAdjacentHTML('beforeend', itemHtml);
+    });
+
+    function addTask(btn) {
+      const tasksContainer = btn.previousElementSibling;
+      const taskHtml = `<div class="task-item"><div class="task-grid"><div><label style="display:block;margin-bottom:5px;font-size:12px">Task Description</label><input type="text" class="taskDesc" required></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Format</label><select class="pricingFormat"><option value="lump-sum">Lump Sum</option><option value="unit-based">Unit-based</option><option value="additive">Additive</option><option value="distance-surcharge">Distance Surcharge</option></select></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Cost</label><input type="number" class="cost" step="0.01" required></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Quantity</label><input type="number" class="quantity" value="1" step="0.01" required></div><button type="button" class="btn btn-danger btn-small" onclick="this.closest('.task-item').remove()">Remove</button></div></div>`;
+      tasksContainer.insertAdjacentHTML('beforeend', taskHtml);
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+      const quotation = {
+        header: {date: document.getElementById('date').value, customer_name: document.getElementById('customerName').value, customer_location: document.getElementById('customerLocation').value, attention: document.getElementById('attention').value, phone: document.getElementById('phone').value, installation_location: document.getElementById('installLocation').value},
+        doc_type: document.getElementById('docType').value,
+        items: [],
+        summary: {payment_terms: document.getElementById('paymentTerms').value, warranty: document.getElementById('warranty').value, exceptions: document.getElementById('exceptions').value, manager: document.getElementById('manager').value},
+        generated_html: ''
+      };
+
+      document.querySelectorAll('.item-block').forEach(itemEl => {
+        const item = {name: itemEl.querySelector('.itemName').value, ac_brand: itemEl.querySelector('.acBrand').value, ac_model: itemEl.querySelector('.acModel').value, warranty: itemEl.querySelector('.itemWarranty').value, tasks: []};
+        itemEl.querySelectorAll('.task-item').forEach(taskEl => {
+          item.tasks.push({description: taskEl.querySelector('.taskDesc').value, pricing_format: taskEl.querySelector('.pricingFormat').value, cost: parseFloat(taskEl.querySelector('.cost').value), quantity: parseFloat(taskEl.querySelector('.quantity').value)});
+        });
+        quotation.items.push(item);
+      });
+
+      if (!quotation.header.customer_name || quotation.items.length === 0) {
+        alert('Please fill in customer name and add at least one item.');
+        return;
+      }
+
+      try {
+        const response = await fetch(API_URL, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(quotation)});
+        currentQuotation = await response.json();
+        displayQuotation(currentQuotation);
+        document.querySelector('[data-section="view"]').click();
+      } catch (error) {
+        alert('Error saving quotation: ' + error.message);
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('customerName').value = '';
+      document.getElementById('customerLocation').value = '';
+      document.getElementById('attention').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('installLocation').value = '';
+      document.getElementById('itemsContainer').innerHTML = '';
+      document.getElementById('paymentTerms').value = '';
+      document.getElementById('warranty').value = '';
+      document.getElementById('exceptions').value = '';
+      document.getElementById('manager').value = 'J.B Yap Jr.';
+    });
+
+    async function loadQuotations() {
+      try {
+        const response = await fetch(API_URL);
+        const quotations = await response.json();
+        let html = '<table><thead><tr><th>Date</th><th>Customer</th><th>Type</th><th>Actions</th></tr></thead><tbody>';
+        quotations.forEach(q => {
+          html += `<tr><td>${new Date(q.date_created).toLocaleDateString()}</td><td>${q.header.customer_name}</td><td>${q.doc_type === 'job' ? 'Job' : 'Summary'}</td><td class="action-buttons"><button class="btn btn-primary btn-small" onclick="viewQuotation('${q.id}')">View</button><button class="btn btn-secondary btn-small" onclick="editQuotation('${q.id}')">Edit</button><button class="btn btn-danger btn-small" onclick="deleteQuotation('${q.id}')">Delete</button></td></tr>`;
+        });
+        html += '</tbody></table>';
+        document.getElementById('quotationsList').innerHTML = html;
+      } catch (error) {
+        document.getElementById('quotationsList').innerHTML = '<p>Error loading quotations</p>';
+      }
+    }
+
+    async function viewQuotation(id) {
+      try {
+        const response = await fetch(`${API_URL}/${id}`);
+        currentQuotation = await response.json();
+        displayQuotation(currentQuotation);
+        document.querySelector('[data-section="view"]').click();
+      } catch (error) {
+        alert('Error loading quotation');
+      }
+    }
+
+    function displayQuotation(q) {
+      let html = `<div class="quotation-header"><div class="company-name">AC & HVAC Services</div><div class="company-info">Professional Air Conditioning & Refrigeration Services</div><div class="company-info">Phone: (123) 456-7890 | Email: info@acservices.com</div></div><div class="customer-section"><h2>Customer Information</h2><p><strong>Customer:</strong> ${q.header.customer_name}</p><p><strong>Address:</strong> ${q.header.customer_location}</p><p><strong>Attention:</strong> ${q.header.attention}</p><p><strong>Phone:</strong> ${q.header.phone}</p><p><strong>Installation Location:</strong> ${q.header.installation_location}</p><p><strong>Date:</strong> ${new Date(q.header.date).toLocaleDateString()}</p></div><div class="items-section"><h2>Scope of Work</h2>`;
+
+      q.items.forEach((item, idx) => {
+        html += `<div class="item-print"><h3>Item ${idx + 1}: ${item.name}</h3><p><strong>Brand:</strong> ${item.ac_brand} | <strong>Model:</strong> ${item.ac_model} | <strong>Warranty:</strong> ${item.warranty}</p>`;
+        item.tasks.forEach(task => {
+          const total = task.cost * task.quantity;
+          html += `<div class="task-print"><p><strong>${task.description}</strong></p><p>Format: ${task.pricing_format} | Cost: $${task.cost.toFixed(2)} × ${task.quantity} = <strong>$${total.toFixed(2)}</strong></p></div>`;
+        });
+        html += `</div>`;
+      });
+
+      html += `</div><div class="summary-section"><h2>Terms & Conditions</h2><h3>Payment Terms</h3><p>${q.summary.payment_terms}</p><h3>Warranty</h3><p>${q.summary.warranty}</p><h3>Exceptions/Notes</h3><p>${q.summary.exceptions}</p><h3 style="margin-top:20px">Manager: ${q.summary.manager}</h3></div>`;
+
+      document.getElementById('printArea').innerHTML = html;
+    }
+
+    async function deleteQuotation(id) {
+      if (!confirm('Delete this quotation?')) return;
+      try {
+        await fetch(`${API_URL}/${id}`, {method: 'DELETE'});
+        loadQuotations();
+      } catch (error) {
+        alert('Error deleting quotation');
+      }
+    }
+
+    function editQuotation(id) {
+      alert('Edit feature coming soon');
+    }
+
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+      alert('Use Print (Ctrl+P) and select "Save as PDF"');
+    });
+
+    document.getElementById('downloadHtmlBtn').addEventListener('click', () => {
+      const element = document.getElementById('printArea');
+      const dataStr = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Quotation</title></head><body>' + element.innerHTML + '</body></html>';
+      const dataBlob = new Blob([dataStr], {type: 'text/html'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `quotation-${currentQuotation.id}.html`;
+      link.click();
+    });
+
+    document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+      const dataStr = JSON.stringify(currentQuotation, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `quotation-${currentQuotation.id}.json`;
+      link.click();
+    });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.querySelector('[data-section="list"]').click();
+    });
+  </script>
+</body>
+</html>
