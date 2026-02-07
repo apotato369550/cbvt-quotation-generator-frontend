@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1770291778138",
+    "date_created": "2026-02-05T11:42:58.138Z",
+    "status": "draft",
+    "header": {
+      "date": "2026-02-05",
+      "customer_name": "Neil John Yap",
+      "customer_location": "Cebu City",
+      "attention": "Boi",
+      "phone": "09150443019",
+      "installation_location": "Room"
+    },
+    "doc_type": "job",
+    "items": [
+      {
+        "name": "One unit plbalbask;lasjdfl;",
+        "ac_brand": "Daikin",
+        "ac_model": "3094123412",
+        "warranty": "null and void",
+        "tasks": []
+      }
+    ],
+    "summary": {
+      "payment_terms": "Cash on delivery",
+      "warranty": "90 days",
+      "exceptions": "nothing lol",
+      "manager": "J.B Yap Jr."
+    },
+    "generated_html": ""
+  },
+  {
+    "id": "1770291783053",
+    "date_created": "2026-02-05T11:43:03.053Z",
+    "status": "draft",
+    "header": {
+      "date": "2026-02-05",
+      "customer_name": "Neil John Yap",
+      "customer_location": "Cebu City",
+      "attention": "Boi",
+      "phone": "09150443019",
+      "installation_location": "Room"
+    },
+    "doc_type": "job",
+    "items": [
+      {
+        "name": "One unit plbalbask;lasjdfl;",
+        "ac_brand": "Daikin",
+        "ac_model": "3094123412",
+        "warranty": "null and void",
+        "tasks": []
+      }
+    ],
+    "summary": {
+      "payment_terms": "Cash on delivery",
+      "warranty": "90 days",
+      "exceptions": "nothing lol",
+      "manager": "J.B Yap Jr."
+    },
+    "generated_html": ""
+  }
+]

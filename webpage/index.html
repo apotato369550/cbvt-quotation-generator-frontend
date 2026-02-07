@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotation Generator</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:#2c2c2c;
+      line-height:1.6;
+      min-height:100vh;
+      padding:30px 20px
+    }
+    header{
+      text-align:center;
+      margin-bottom:40px;
+      color:white;
+      animation:slideDown .4s ease
+    }
+    h1{
+      font-size:32px;
+      font-weight:700;
+      margin-bottom:8px;
+      letter-spacing:-.5px
+    }
+    .main-container{
+      max-width:1400px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:30px;
+      auto-rows:max-content
+    }
+    .card{
+      background:white;
+      border-radius:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,.15);
+      padding:32px;
+      animation:fadeInUp .4s ease;
+      transition:transform .2s,box-shadow .2s
+    }
+    .card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 30px rgba(0,0,0,.2)
+    }
+    .card-title{
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:24px;
+      color:#2c2c2c;
+      padding-bottom:12px;
+      border-bottom:2px solid #667eea
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-bottom:16px
+    }
+    .form-grid.full{grid-template-columns:1fr}
+    .form-group{
+      display:flex;
+      flex-direction:column
+    }
+    label{
+      font-weight:600;
+      margin-bottom:8px;
+      font-size:13px;
+      color:#555;
+      text-transform:uppercase;
+      letter-spacing:.5px
+    }
+    input,select,textarea{
+      padding:12px;
+      border:1.5px solid #e0e0e0;
+      border-radius:8px;
+      font:inherit;
+      font-size:14px;
+      width:100%;
+      transition:border-color .2s,box-shadow .2s
+    }
+    input:focus,select:focus,textarea:focus{
+      outline:0;
+      border-color:#667eea;
+      box-shadow:0 0 0 3px rgba(102,126,234,.1)
+    }
+    textarea{
+      resize:vertical;
+      min-height:80px;
+      font-family:inherit
+    }
+    .section-title{
+      font-size:14px;
+      font-weight:700;
+      margin-top:24px;
+      margin-bottom:12px;
+      color:#667eea;
+      text-transform:uppercase;
+      letter-spacing:.5px
+    }
+    .item-block{
+      background:#f8f9ff;
+      padding:20px;
+      margin-bottom:20px;
+      border-left:3px solid #667eea;
+      border-radius:8px;
+      transition:all .2s
+    }
+    .item-block:hover{
+      background:#eff2ff;
+      border-left-color:#764ba2
+    }
+    .item-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:15px
+    }
+    .item-title{
+      font-weight:600;
+      color:#2c2c2c;
+      font-size:15px
+    }
+    .btn{
+      padding:11px 18px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:600;
+      transition:all .2s;
+      letter-spacing:.3px;
+      text-transform:uppercase
+    }
+    .btn-primary{
+      background:#667eea;
+      color:white
+    }
+    .btn-primary:hover{
+      background:#5568d3;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(102,126,234,.4)
+    }
+    .btn-success{
+      background:#48bb78;
+      color:white
+    }
+    .btn-success:hover{
+      background:#38a169;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(72,187,120,.4)
+    }
+    .btn-danger{
+      background:#f56565;
+      color:white
+    }
+    .btn-danger:hover{
+      background:#e53e3e;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(245,101,101,.4)
+    }
+    .btn-secondary{
+      background:#cbd5e0;
+      color:#2c2c2c
+    }
+    .btn-secondary:hover{
+      background:#a0aec0;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(203,213,224,.4)
+    }
+    .btn-small{
+      padding:6px 12px;
+      font-size:12px
+    }
+    .btn-group{
+      display:flex;
+      gap:12px;
+      margin-top:24px;
+      flex-wrap:wrap
+    }
+    .task-item{
+      background:white;
+      padding:16px;
+      margin-bottom:12px;
+      border:1.5px solid #e0e0e0;
+      border-radius:8px;
+      transition:all .2s
+    }
+    .task-item:hover{
+      border-color:#667eea;
+      box-shadow:0 2px 8px rgba(102,126,234,.1)
+    }
+    .task-grid{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 1fr auto;
+      gap:12px;
+      align-items:end
+    }
+    .task-grid input,.task-grid select{width:100%}
+    .quotations-table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:16px
+    }
+    .quotations-table th{
+      background:#f0f4ff;
+      padding:12px;
+      text-align:left;
+      font-weight:600;
+      border-bottom:2px solid #667eea;
+      font-size:13px;
+      color:#2c2c2c;
+      text-transform:uppercase;
+      letter-spacing:.3px
+    }
+    .quotations-table td{
+      padding:14px 12px;
+      border-bottom:1px solid #e0e0e0;
+      font-size:14px
+    }
+    .quotations-table tbody tr{
+      transition:background .2s
+    }
+    .quotations-table tbody tr:hover{
+      background:#f8f9ff
+    }
+    .action-buttons{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap
+    }
+    .print-view{
+      background:white;
+      padding:40px;
+      line-height:1.8;
+      border-radius:12px
+    }
+    .print-view h2{
+      margin:20px 0 15px 0;
+      font-size:18px;
+      color:#2c2c2c;
+      border-bottom:1px solid #e0e0e0;
+      padding-bottom:10px
+    }
+    .print-view h3{
+      margin:15px 0 10px 0;
+      font-size:15px;
+      color:#555
+    }
+    .quotation-header{
+      text-align:center;
+      margin-bottom:30px;
+      padding-bottom:20px;
+      border-bottom:2px solid #333
+    }
+    .company-name{
+      font-size:24px;
+      font-weight:bold;
+      color:#2c2c2c
+    }
+    .company-info{
+      font-size:13px;
+      color:#666
+    }
+    .customer-section{
+      margin-bottom:25px;
+      padding:15px;
+      background:#f8f9ff;
+      border-radius:8px
+    }
+    .items-section{margin-bottom:25px}
+    .item-print{
+      page-break-inside:avoid;
+      margin-bottom:20px;
+      padding:15px;
+      border:1px solid #e0e0e0;
+      border-radius:8px
+    }
+    .task-print{
+      margin-left:20px;
+      margin-bottom:10px;
+      padding:10px;
+      background:#f8f9ff;
+      border-radius:6px
+    }
+    .summary-section{
+      margin-top:30px;
+      padding:20px;
+      background:#f0f4ff;
+      border-radius:8px
+    }
+    .export-buttons{
+      display:flex;
+      gap:10px;
+      margin-top:20px;
+      margin-bottom:20px;
+      flex-wrap:wrap
+    }
+    .import-buttons{
+      display:flex;
+      gap:10px;
+      margin-bottom:24px
+    }
+    .btn-import{
+      flex:1;
+      padding:11px 18px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:13px;
+      font-weight:600;
+      background:#667eea;
+      color:white;
+      transition:all .2s;
+      letter-spacing:.3px
+    }
+    .btn-import:hover{
+      background:#5568d3;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(102,126,234,.4)
+    }
+    .import-modal-content{
+      display:flex;
+      flex-direction:column;
+      gap:20px
+    }
+    .import-tabs{
+      display:flex;
+      gap:0;
+      border-bottom:2px solid #e0e0e0;
+      margin-bottom:10px
+    }
+    .import-tab{
+      padding:12px 20px;
+      border:none;
+      background:none;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:600;
+      color:#999;
+      border-bottom:3px solid transparent;
+      transition:all .2s;
+      text-transform:uppercase;
+      letter-spacing:.3px
+    }
+    .import-tab.active{
+      color:#667eea;
+      border-bottom-color:#667eea
+    }
+    .import-tab-content{
+      display:none
+    }
+    .import-tab-content.active{
+      display:block
+    }
+    .import-file-input{
+      padding:12px;
+      border:2px dashed #ccc;
+      border-radius:8px;
+      text-align:center;
+      cursor:pointer;
+      transition:all .2s
+    }
+    .import-file-input:hover{
+      border-color:#667eea;
+      background:#f0f4ff
+    }
+    .import-file-input.has-file{
+      border-color:#48bb78;
+      background:#c6f6d5
+    }
+    .import-textarea{
+      width:100%;
+      height:200px;
+      padding:12px;
+      border:1.5px solid #e0e0e0;
+      border-radius:8px;
+      font-family:monospace;
+      font-size:13px;
+      resize:vertical
+    }
+    .import-textarea:focus{
+      outline:0;
+      border-color:#667eea;
+      box-shadow:0 0 0 3px rgba(102,126,234,.1)
+    }
+    .import-actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end
+    }
+    .status-message{
+      padding:12px;
+      border-radius:8px;
+      margin-top:12px;
+      font-size:14px;
+      display:none
+    }
+    .status-message.success{
+      background:#c6f6d5;
+      color:#22543d;
+      display:block
+    }
+    .status-message.error{
+      background:#fed7d7;
+      color:#742a2a;
+      display:block
+    }
+    .modal{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,.6);
+      z-index:999;
+      overflow-y:auto;
+      padding:30px 20px;
+      animation:fadeIn .2s
+    }
+    .modal.show{display:block}
+    .modal-content{
+      background:white;
+      max-width:900px;
+      margin:30px auto;
+      border-radius:12px;
+      box-shadow:0 20px 60px rgba(0,0,0,.3);
+      max-height:90vh;
+      overflow-y:auto
+    }
+    .modal-header{
+      padding:24px;
+      border-bottom:1px solid #e0e0e0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center
+    }
+    .modal-header h2{
+      font-size:22px;
+      color:#2c2c2c
+    }
+    .modal-close{
+      background:none;
+      border:none;
+      font-size:28px;
+      cursor:pointer;
+      color:#999;
+      padding:0;
+      width:32px;
+      height:32px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:color .2s
+    }
+    .modal-close:hover{color:#2c2c2c}
+    .modal-body{
+      padding:24px
+    }
+    .empty-state{
+      text-align:center;
+      padding:40px 20px;
+      color:#999
+    }
+    .empty-state svg{
+      width:64px;
+      height:64px;
+      margin-bottom:20px;
+      opacity:.5
+    }
+    .form-card{grid-column:1}
+    .quotations-card{grid-column:2;grid-row:1/3}
+    @media(max-width:1024px){
+      .main-container{grid-template-columns:1fr;gap:24px}
+      .form-card{grid-column:1}
+      .quotations-card{grid-column:1;grid-row:auto}
+      .task-grid{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+    }
+    @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @media print{
+      body{background:white;padding:0}
+      .main-container,.form-card,.quotations-card,.export-buttons,.modal-header{display:none}
+      .modal-content{
+        max-width:100%;
+        margin:0;
+        box-shadow:none;
+        max-height:none
+      }
+      .print-view{padding:0;box-shadow:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Quotation Generator</h1>
+  </header>
+
+  <div class="main-container">
+    <!-- Create Form Card -->
+    <div class="card form-card">
+      <div class="card-title">Create New Quotation</div>
+
+      <!-- Import Buttons -->
+      <div class="import-buttons">
+        <button class="btn-import" id="importJsonBtn">Import JSON</button>
+        <button class="btn-import" id="importCsvBtn">Import CSV</button>
+      </div>
+      <div id="importStatus" class="status-message"></div>
+
+      <div class="form-grid full">
+        <div class="form-group">
+          <label>Document Type</label>
+          <select id="docType">
+            <option value="job">Job Quotation</option>
+            <option value="summary">Summary</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-title">Customer Information</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Date</label><input type="date" id="date" required></div>
+        <div class="form-group"><label>Customer Name</label><input type="text" id="customerName" required></div>
+        <div class="form-group"><label>Location</label><input type="text" id="customerLocation"></div>
+        <div class="form-group"><label>Attention</label><input type="text" id="attention"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="phone"></div>
+        <div class="form-group"><label>Installation Location</label><input type="text" id="installLocation"></div>
+      </div>
+
+      <div class="section-title">Items & Tasks</div>
+      <div id="itemsContainer"></div>
+      <button class="btn btn-primary" id="addItemBtn">+ Add Item</button>
+
+      <div class="section-title">Summary & Terms</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Payment Terms</label><textarea id="paymentTerms"></textarea></div>
+        <div class="form-group"><label>Warranty</label><textarea id="warranty"></textarea></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label>Exceptions/Notes</label><textarea id="exceptions"></textarea></div>
+        <div class="form-group"><label>Manager</label><input type="text" id="manager" value="J.B Yap Jr."></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-success" id="generateBtn">Generate Quotation</button>
+        <button class="btn btn-secondary" id="clearBtn">Clear Form</button>
+      </div>
+    </div>
+
+    <!-- Quotations List Card -->
+    <div class="card quotations-card">
+      <div class="card-title">Saved Quotations</div>
+      <div id="quotationsList"></div>
+    </div>
+  </div>
+
+  <!-- View Modal -->
+  <div id="viewModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Quotation Details</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="export-buttons" style="margin:0;padding:0 24px 20px 24px">
+        <button class="btn btn-primary" id="printBtn">Download PDF</button>
+        <button class="btn btn-secondary" id="downloadHtmlBtn">Download HTML</button>
+        <button class="btn btn-secondary" id="downloadDocxBtn">Download DOCX</button>
+        <button class="btn btn-secondary" id="downloadJsonBtn">Download JSON</button>
+      </div>
+      <div class="modal-body">
+        <div id="printArea" class="print-view"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <div id="importModal" class="modal">
+    <div class="modal-content" style="max-width:500px">
+      <div class="modal-header">
+        <h2 id="importModalTitle">Import JSON</h2>
+        <button class="modal-close" onclick="closeImportModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="import-modal-content">
+          <!-- File Upload -->
+          <div>
+            <label style="display:block;margin-bottom:8px;font-weight:600">Choose file...</label>
+            <div class="import-file-input" id="importFileInput">Click to select file</div>
+            <input type="file" id="importFileInputHidden" style="display:none" />
+          </div>
+
+          <!-- Or Paste Content -->
+          <div style="margin-top:20px">
+            <label style="display:block;margin-bottom:8px;font-weight:600">Or paste content:</label>
+            <textarea id="importPasteArea" class="import-textarea" placeholder="Paste content here..."></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div class="import-actions">
+            <button class="btn btn-secondary" onclick="closeImportModal()">Cancel</button>
+            <button class="btn btn-primary" id="importActionBtn">Import</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = '/api/quotations';
+    const FASTAPI_URL = 'http://localhost:5000';
+    let currentQuotation = null;
+
+    // Import state
+    let currentImportType = 'json';
+    let importedFile = null;
+
+    // Initialize
+    document.getElementById('date').valueAsDate = new Date();
+    loadQuotations();
+    setupImportHandlers();
+
+    // Add Item
+    document.getElementById('addItemBtn').addEventListener('click', () => {
+      const itemNum = document.querySelectorAll('.item-block').length + 1;
+      const itemHtml = `<div class="item-block"><div class="item-header"><div class="item-title">Item ${itemNum}</div><button type="button" class="btn btn-danger btn-small" onclick="this.closest('.item-block').remove()">Remove</button></div><div class="form-grid"><div class="form-group"><label>Item Name</label><input type="text" class="itemName" required></div><div class="form-group"><label>AC Brand</label><input type="text" class="acBrand"></div><div class="form-group"><label>AC Model</label><input type="text" class="acModel"></div><div class="form-group"><label>Warranty</label><input type="text" class="itemWarranty"></div></div><div class="section-title" style="margin-top:15px">Tasks</div><div class="tasksContainer"></div><button type="button" class="btn btn-primary" onclick="addTask(this)">+ Add Task</button></div>`;
+      document.getElementById('itemsContainer').insertAdjacentHTML('beforeend', itemHtml);
+    });
+
+    function addTask(btn) {
+      const tasksContainer = btn.previousElementSibling;
+      const taskHtml = `<div class="task-item"><div class="task-grid"><div><label style="display:block;margin-bottom:5px;font-size:12px">Task Description</label><input type="text" class="taskDesc" required></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Format</label><select class="pricingFormat"><option value="lump-sum">Lump Sum</option><option value="unit-based">Unit-based</option><option value="additive">Additive</option><option value="distance-surcharge">Distance Surcharge</option></select></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Cost</label><input type="number" class="cost" step="0.01" required></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Quantity</label><input type="number" class="quantity" value="1" step="0.01" required></div><button type="button" class="btn btn-danger btn-small" onclick="this.closest('.task-item').remove()">Remove</button></div></div>`;
+      tasksContainer.insertAdjacentHTML('beforeend', taskHtml);
+    }
+
+    // Generate Quotation
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+      const quotation = {
+        header: {
+          date: document.getElementById('date').value,
+          customer_name: document.getElementById('customerName').value,
+          customer_location: document.getElementById('customerLocation').value,
+          attention: document.getElementById('attention').value,
+          phone: document.getElementById('phone').value,
+          installation_location: document.getElementById('installLocation').value
+        },
+        doc_type: document.getElementById('docType').value,
+        items: [],
+        summary: {
+          payment_terms: document.getElementById('paymentTerms').value,
+          warranty: document.getElementById('warranty').value,
+          exceptions: document.getElementById('exceptions').value,
+          manager: document.getElementById('manager').value
+        },
+        generated_html: ''
+      };
+
+      document.querySelectorAll('.item-block').forEach(itemEl => {
+        const item = {
+          name: itemEl.querySelector('.itemName').value,
+          ac_brand: itemEl.querySelector('.acBrand').value,
+          ac_model: itemEl.querySelector('.acModel').value,
+          warranty: itemEl.querySelector('.itemWarranty').value,
+          tasks: []
+        };
+        itemEl.querySelectorAll('.task-item').forEach(taskEl => {
+          item.tasks.push({
+            description: taskEl.querySelector('.taskDesc').value,
+            pricing_format: taskEl.querySelector('.pricingFormat').value,
+            cost: parseFloat(taskEl.querySelector('.cost').value),
+            quantity: parseFloat(taskEl.querySelector('.quantity').value)
+          });
+        });
+        quotation.items.push(item);
+      });
+
+      if (!quotation.header.customer_name || quotation.items.length === 0) {
+        alert('Please fill in customer name and add at least one item.');
+        return;
+      }
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(quotation)
+        });
+        currentQuotation = await response.json();
+        displayQuotation(currentQuotation);
+        openModal();
+        loadQuotations();
+      } catch (error) {
+        alert('Error saving quotation: ' + error.message);
+      }
+    });
+
+    // Clear Form
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('customerName').value = '';
+      document.getElementById('customerLocation').value = '';
+      document.getElementById('attention').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('installLocation').value = '';
+      document.getElementById('itemsContainer').innerHTML = '';
+      document.getElementById('paymentTerms').value = '';
+      document.getElementById('warranty').value = '';
+      document.getElementById('exceptions').value = '';
+      document.getElementById('manager').value = 'J.B Yap Jr.';
+    });
+
+    // Load Quotations
+    async function loadQuotations() {
+      try {
+        const response = await fetch(API_URL);
+        const quotations = await response.json();
+
+        if (quotations.length === 0) {
+          document.getElementById('quotationsList').innerHTML = '<div class="empty-state"><p>No quotations yet. Create one to get started.</p></div>';
+          return;
+        }
+
+        let html = '<table class="quotations-table"><thead><tr><th>Date</th><th>Customer</th><th>Type</th><th>Actions</th></tr></thead><tbody>';
+        quotations.forEach(q => {
+          html += `<tr><td>${new Date(q.date_created).toLocaleDateString()}</td><td>${q.header.customer_name}</td><td>${q.doc_type === 'job' ? 'Job' : 'Summary'}</td><td class="action-buttons"><button class="btn btn-primary btn-small" onclick="viewQuotation('${q.id}')">View</button><button class="btn btn-danger btn-small" onclick="deleteQuotation('${q.id}')">Delete</button></td></tr>`;
+        });
+        html += '</tbody></table>';
+        document.getElementById('quotationsList').innerHTML = html;
+      } catch (error) {
+        document.getElementById('quotationsList').innerHTML = '<p>Error loading quotations</p>';
+      }
+    }
+
+    // View Quotation
+    async function viewQuotation(id) {
+      try {
+        const response = await fetch(`${API_URL}/${id}`);
+        currentQuotation = await response.json();
+        displayQuotation(currentQuotation);
+        openModal();
+      } catch (error) {
+        alert('Error loading quotation');
+      }
+    }
+
+    // Display Quotation
+    function displayQuotation(q) {
+      let html = `<div class="quotation-header"><div class="company-name">AC & HVAC Services</div><div class="company-info">Professional Air Conditioning & Refrigeration Services</div><div class="company-info">Phone: (123) 456-7890 | Email: info@acservices.com</div></div><div class="customer-section"><h2>Customer Information</h2><p><strong>Customer:</strong> ${q.header.customer_name}</p><p><strong>Address:</strong> ${q.header.customer_location}</p><p><strong>Attention:</strong> ${q.header.attention}</p><p><strong>Phone:</strong> ${q.header.phone}</p><p><strong>Installation Location:</strong> ${q.header.installation_location}</p><p><strong>Date:</strong> ${new Date(q.header.date).toLocaleDateString()}</p></div><div class="items-section"><h2>Scope of Work</h2>`;
+
+      q.items.forEach((item, idx) => {
+        html += `<div class="item-print"><h3>Item ${idx + 1}: ${item.name}</h3><p><strong>Brand:</strong> ${item.ac_brand} | <strong>Model:</strong> ${item.ac_model} | <strong>Warranty:</strong> ${item.warranty}</p>`;
+        item.tasks.forEach(task => {
+          const total = task.cost * task.quantity;
+          html += `<div class="task-print"><p><strong>${task.description}</strong></p><p>Format: ${task.pricing_format} | Cost: $${task.cost.toFixed(2)} × ${task.quantity} = <strong>$${total.toFixed(2)}</strong></p></div>`;
+        });
+        html += `</div>`;
+      });
+
+      html += `</div><div class="summary-section"><h2>Terms & Conditions</h2><h3>Payment Terms</h3><p>${q.summary.payment_terms}</p><h3>Warranty</h3><p>${q.summary.warranty}</p><h3>Exceptions/Notes</h3><p>${q.summary.exceptions}</p><h3 style="margin-top:20px">Manager: ${q.summary.manager}</h3></div>`;
+
+      document.getElementById('printArea').innerHTML = html;
+    }
+
+    // Delete Quotation
+    async function deleteQuotation(id) {
+      if (!confirm('Delete this quotation?')) return;
+      try {
+        await fetch(`${API_URL}/${id}`, {method: 'DELETE'});
+        loadQuotations();
+      } catch (error) {
+        alert('Error deleting quotation');
+      }
+    }
+
+    // Modal Functions
+    function openModal() {
+      document.getElementById('viewModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('viewModal').classList.remove('show');
+    }
+
+    document.getElementById('viewModal').addEventListener('click', (e) => {
+      if (e.target.id === 'viewModal') closeModal();
+    });
+
+    // Import handlers - FIXED
+    function setupImportHandlers() {
+      // Import JSON Button
+      document.getElementById('importJsonBtn').addEventListener('click', () => {
+        currentImportType = 'json';
+        openImportModal('JSON');
+      });
+
+      // Import CSV Button
+      document.getElementById('importCsvBtn').addEventListener('click', () => {
+        currentImportType = 'csv';
+        openImportModal('CSV');
+      });
+
+      // File input click handler
+      document.getElementById('importFileInput').addEventListener('click', () => {
+        const fileInput = document.getElementById('importFileInputHidden');
+        if (currentImportType === 'json') {
+          fileInput.accept = '.json';
+        } else {
+          fileInput.accept = '.csv';
+        }
+        fileInput.click();
+      });
+
+      // File selected handler
+      document.getElementById('importFileInputHidden').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          importedFile = file;
+          document.getElementById('importFileInput').classList.add('has-file');
+          document.getElementById('importFileInput').textContent = 'File selected: ' + file.name;
+        }
+      });
+
+      // Import Action Button - FIXED async handling
+      document.getElementById('importActionBtn').addEventListener('click', handleImportAction);
+
+      // Close modal on backdrop click
+      document.getElementById('importModal').addEventListener('click', (e) => {
+        if (e.target.id === 'importModal') closeImportModal();
+      });
+    }
+
+    function openImportModal(type) {
+      document.getElementById('importModalTitle').textContent = 'Import ' + type;
+      document.getElementById('importFileInput').classList.remove('has-file');
+      document.getElementById('importFileInput').textContent = 'Click to select file';
+      document.getElementById('importPasteArea').value = '';
+      document.getElementById('importFileInputHidden').value = '';
+      importedFile = null;
+      document.getElementById('importModal').classList.add('show');
+    }
+
+    function closeImportModal() {
+      document.getElementById('importModal').classList.remove('show');
+      importedFile = null;
+      document.getElementById('importFileInputHidden').value = '';
+    }
+
+    function handleImportAction() {
+      if (currentImportType === 'json') {
+        handleJsonImport();
+      } else if (currentImportType === 'csv') {
+        handleCsvImport();
+      }
+    }
+
+    function handleJsonImport() {
+      if (importedFile) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            populateFormFromData(data);
+            showStatus('JSON quotation imported successfully!', 'success');
+            closeImportModal();
+          } catch (error) {
+            showStatus('Error: Invalid JSON - ' + error.message, 'error');
+          }
+        };
+        reader.onerror = () => {
+          showStatus('Error reading file', 'error');
+        };
+        reader.readAsText(importedFile);
+      } else {
+        const jsonText = document.getElementById('importPasteArea').value.trim();
+        if (!jsonText) {
+          showStatus('Please select a file or paste JSON content', 'error');
+          return;
+        }
+        try {
+          const data = JSON.parse(jsonText);
+          populateFormFromData(data);
+          showStatus('JSON quotation imported successfully!', 'success');
+          closeImportModal();
+        } catch (error) {
+          showStatus('Error: Invalid JSON - ' + error.message, 'error');
+        }
+      }
+    }
+
+    function handleCsvImport() {
+      if (importedFile) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            parseAndPopulateCSV(e.target.result);
+            showStatus('CSV imported successfully! Please add items and summary information.', 'success');
+            closeImportModal();
+          } catch (error) {
+            showStatus('Error: Invalid CSV - ' + error.message, 'error');
+          }
+        };
+        reader.onerror = () => {
+          showStatus('Error reading file', 'error');
+        };
+        reader.readAsText(importedFile);
+      } else {
+        const csvText = document.getElementById('importPasteArea').value.trim();
+        if (!csvText) {
+          showStatus('Please select a file or paste CSV content', 'error');
+          return;
+        }
+        try {
+          parseAndPopulateCSV(csvText);
+          showStatus('CSV imported successfully! Please add items and summary information.', 'success');
+          closeImportModal();
+        } catch (error) {
+          showStatus('Error: Invalid CSV - ' + error.message, 'error');
+        }
+      }
+    }
+
+    function parseAndPopulateCSV(csv) {
+      const lines = csv.trim().split('\n');
+
+      if (lines.length < 2) {
+        throw new Error('CSV must contain header and data row');
+      }
+
+      // Parse header
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      const requiredColumns = ['date', 'customer_name', 'customer_location', 'attention', 'phone', 'installation_location'];
+
+      // Validate required columns
+      const missingColumns = requiredColumns.filter(col => !headers.includes(col));
+      if (missingColumns.length > 0) {
+        throw new Error('Missing required columns: ' + missingColumns.join(', '));
+      }
+
+      // Parse data row (second row)
+      const values = lines[1].split(',').map(v => v.trim());
+      const data = {};
+
+      headers.forEach((header, idx) => {
+        data[header] = values[idx] || '';
+      });
+
+      // Clear form
+      document.getElementById('itemsContainer').innerHTML = '';
+
+      // Populate header fields
+      document.getElementById('date').value = data.date || '';
+      document.getElementById('customerName').value = data.customer_name || '';
+      document.getElementById('customerLocation').value = data.customer_location || '';
+      document.getElementById('attention').value = data.attention || '';
+      document.getElementById('phone').value = data.phone || '';
+      document.getElementById('installLocation').value = data.installation_location || '';
+
+      // Reset items and summary (user to add manually)
+      document.getElementById('paymentTerms').value = '';
+      document.getElementById('warranty').value = '';
+      document.getElementById('exceptions').value = '';
+    }
+
+
+    function populateFormFromData(data) {
+      // Header fields
+      if (data.header) {
+        if (data.header.date) document.getElementById('date').value = data.header.date;
+        if (data.header.customer_name) document.getElementById('customerName').value = data.header.customer_name;
+        if (data.header.customer_location) document.getElementById('customerLocation').value = data.header.customer_location;
+        if (data.header.attention) document.getElementById('attention').value = data.header.attention;
+        if (data.header.phone) document.getElementById('phone').value = data.header.phone;
+        if (data.header.installation_location) document.getElementById('installLocation').value = data.header.installation_location;
+      }
+
+      // Doc type
+      if (data.doc_type) document.getElementById('docType').value = data.doc_type;
+
+      // Clear existing items
+      document.getElementById('itemsContainer').innerHTML = '';
+
+      // Populate items
+      if (data.items && Array.isArray(data.items)) {
+        data.items.forEach((item, itemIndex) => {
+          const itemNum = document.querySelectorAll('.item-block').length + 1;
+          const itemHtml = `<div class="item-block"><div class="item-header"><div class="item-title">Item ${itemNum}</div><button type="button" class="btn btn-danger btn-small" onclick="this.closest('.item-block').remove()">Remove</button></div><div class="form-grid"><div class="form-group"><label>Item Name</label><input type="text" class="itemName" required></div><div class="form-group"><label>AC Brand</label><input type="text" class="acBrand"></div><div class="form-group"><label>AC Model</label><input type="text" class="acModel"></div><div class="form-group"><label>Warranty</label><input type="text" class="itemWarranty"></div></div><div class="section-title" style="margin-top:15px">Tasks</div><div class="tasksContainer"></div><button type="button" class="btn btn-primary btn-add-task" onclick="addTask(this)">+ Add Task</button></div>`;
+          document.getElementById('itemsContainer').insertAdjacentHTML('beforeend', itemHtml);
+
+          const itemBlock = document.querySelectorAll('.item-block')[document.querySelectorAll('.item-block').length - 1];
+          itemBlock.querySelector('.itemName').value = item.name || '';
+          itemBlock.querySelector('.acBrand').value = item.ac_brand || '';
+          itemBlock.querySelector('.acModel').value = item.ac_model || '';
+          itemBlock.querySelector('.itemWarranty').value = item.warranty || '';
+
+          // Populate tasks for this item
+          if (item.tasks && Array.isArray(item.tasks)) {
+            item.tasks.forEach((task) => {
+              const tasksContainer = itemBlock.querySelector('.tasksContainer');
+              const taskHtml = `<div class="task-item"><div class="task-grid"><div><label style="display:block;margin-bottom:5px;font-size:12px">Task Description</label><input type="text" class="taskDesc" required></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Format</label><select class="pricingFormat"><option value="lump-sum">Lump Sum</option><option value="unit-based">Unit-based</option><option value="additive">Additive</option><option value="distance-surcharge">Distance Surcharge</option></select></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Cost</label><input type="number" class="cost" step="0.01" required></div><div><label style="display:block;margin-bottom:5px;font-size:12px">Quantity</label><input type="number" class="quantity" value="1" step="0.01" required></div><button type="button" class="btn btn-danger btn-small" onclick="this.closest('.task-item').remove()">Remove</button></div></div>`;
+              tasksContainer.insertAdjacentHTML('beforeend', taskHtml);
+
+              // Fill in task values
+              const taskItem = tasksContainer.lastElementChild;
+              taskItem.querySelector('.taskDesc').value = task.description || '';
+              taskItem.querySelector('.pricingFormat').value = task.pricing_format || 'lump-sum';
+              taskItem.querySelector('.cost').value = task.cost || 0;
+              taskItem.querySelector('.quantity').value = task.quantity || 1;
+            });
+          }
+        });
+      }
+
+      // Summary fields
+      if (data.summary) {
+        if (data.summary.payment_terms) document.getElementById('paymentTerms').value = data.summary.payment_terms;
+        if (data.summary.warranty) document.getElementById('warranty').value = data.summary.warranty;
+        if (data.summary.exceptions) document.getElementById('exceptions').value = data.summary.exceptions;
+        if (data.summary.manager) document.getElementById('manager').value = data.summary.manager;
+      }
+    }
+
+    function showStatus(message, type) {
+      const statusEl = document.getElementById('importStatus');
+      statusEl.textContent = message;
+      statusEl.className = `status-message ${type}`;
+      setTimeout(() => {
+        statusEl.className = 'status-message';
+      }, 5000);
+    }
+
+    // Export Functions
+    document.getElementById('printBtn').addEventListener('click', async () => {
+      if (!currentQuotation) {
+        alert('No quotation loaded');
+        return;
+      }
+      await exportToPDF();
+    });
+
+    document.getElementById('downloadHtmlBtn').addEventListener('click', async () => {
+      if (!currentQuotation) {
+        alert('No quotation loaded');
+        return;
+      }
+      await exportToHTML();
+    });
+
+    document.getElementById('downloadDocxBtn').addEventListener('click', async () => {
+      if (!currentQuotation) {
+        alert('No quotation loaded');
+        return;
+      }
+      await exportToDOCX();
+    });
+
+    document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+      if (!currentQuotation) {
+        alert('No quotation loaded');
+        return;
+      }
+      const dataStr = JSON.stringify(currentQuotation, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `quotation-${currentQuotation.id}.json`;
+      link.click();
+    });
+
+    async function exportToPDF() {
+      try {
+        const response = await fetch(`${FASTAPI_URL}/format/pdf`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(currentQuotation)
+        });
+
+        if (!response.ok) {
+          throw new Error('Export failed');
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `quotation-${currentQuotation.id}.pdf`;
+        link.click();
+      } catch (error) {
+        alert('Export service unavailable. Make sure FastAPI server is running at http://localhost:5000');
+      }
+    }
+
+    async function exportToHTML() {
+      try {
+        const response = await fetch(`${FASTAPI_URL}/format/html`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(currentQuotation)
+        });
+
+        if (!response.ok) {
+          throw new Error('Export failed');
+        }
+
+        const text = await response.text();
+        const blob = new Blob([text], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `quotation-${currentQuotation.id}.html`;
+        link.click();
+      } catch (error) {
+        alert('Export service unavailable. Make sure FastAPI server is running at http://localhost:5000');
+      }
+    }
+
+    async function exportToDOCX() {
+      try {
+        const response = await fetch(`${FASTAPI_URL}/format/docx`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(currentQuotation)
+        });
+
+        if (!response.ok) {
+          throw new Error('Export failed');
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `quotation-${currentQuotation.id}.docx`;
+        link.click();
+      } catch (error) {
+        alert('Export service unavailable. Make sure FastAPI server is running at http://localhost:5000');
+      }
+    }
+  </script>
+</body>
+</html>
